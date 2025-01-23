@@ -1,6 +1,6 @@
 # CrowdHandler Flutter
 
-A Flutter package integrating [CrowdHandler](https://crowdhandler.com) for managing waiting room flows, request tracking, and performance metrics—all in a **plug-and-play** manner.
+A Flutter package integrating [CrowdHandler](https://www.crowdhandler.com) for managing waiting room flows, request tracking, and performance metrics—all in a **plug-and-play** manner.
 
 ## Table of Contents
 
