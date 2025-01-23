@@ -36,7 +36,7 @@ class _WaitingRoomWebViewState extends State<WaitingRoomWebView> {
     super.initState();
 
     // Build the waiting room URL with the current token (if any)
-    final url = 'https://wait-dev.crowdhandler.com/'
+    final url = 'https://wait.crowdhandler.com/'
         '${widget.slug}?ch-id=${widget.session.token ?? ''}&ch_mode=flutter';
 
     _controller = WebViewController()
