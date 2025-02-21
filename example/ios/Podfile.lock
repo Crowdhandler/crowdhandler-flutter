@@ -1,20 +1,26 @@
 PODS:
+  - fk_user_agent (2.0.0):
+    - Flutter
   - Flutter (1.0.0)
   - webview_flutter_wkwebview (0.0.1):
     - Flutter
     - FlutterMacOS
 
 DEPENDENCIES:
+  - fk_user_agent (from `.symlinks/plugins/fk_user_agent/ios`)
   - Flutter (from `Flutter`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/darwin`)
 
 EXTERNAL SOURCES:
+  fk_user_agent:
+    :path: ".symlinks/plugins/fk_user_agent/ios"
   Flutter:
     :path: Flutter
   webview_flutter_wkwebview:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
+  fk_user_agent: 137145b086229251761678fe034da53753f4ce59
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   webview_flutter_wkwebview: 44d4dee7d7056d5ad185d25b38404436d56c547c
 

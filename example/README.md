@@ -119,7 +119,7 @@ final result = await session.createOrFetch(crowdUrl);
 
 ### Time Tracking
 
-If the user is promoted, you can measure how long they waited:
+If the user is promoted, you can measure load time performance:
 
 ```
 _stopwatch.stop();

@@ -47,7 +47,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -56,6 +56,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.1"
+  fk_user_agent:
+    dependency: transitive
+    description:
+      name: fk_user_agent
+      sha256: fd6c94e120786985a292d12f61422a581f4e851148d5940af38b819357b8ad0d
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   flutter:
     dependency: "direct main"
     description: flutter

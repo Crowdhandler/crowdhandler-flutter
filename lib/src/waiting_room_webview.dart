@@ -73,7 +73,15 @@ class _WaitingRoomWebViewState extends State<WaitingRoomWebView> {
   }
 
   @override
+  void dispose() {
+    // Force the webview to stop running scripts/network requests:
+    _controller.loadRequest(Uri.parse('about:blank'));
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Return the WebView widget as before
     return WebViewWidget(controller: _controller);
   }
 }
