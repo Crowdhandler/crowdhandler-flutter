@@ -1,13 +1,12 @@
 name: crowdhandler_flutter
 description: A Flutter package for integrating CrowdHandler waiting room logic
-version: 1.0.2
+version: 1.0.3
 repository: https://github.com/Crowdhandler/crowdhandler-flutter
 
 environment:
   sdk: ">=2.17.0 <4.0.0"
 
 dependencies:
-  fk_user_agent: ^2.1.0
   flutter:
     sdk: flutter
   http: ^0.13.5
