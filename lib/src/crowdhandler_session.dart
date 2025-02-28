@@ -2,21 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart' show debugPrint, PlatformDispatcher;
 import 'package:http/http.dart' as http;
-
-// Make sure you add fk_user_agent to your pubspec.yaml:
-// dependencies:
-//   fk_user_agent: ^1.0.1 (or latest)
-// Then import it:
-import 'package:fk_user_agent/fk_user_agent.dart';
-
 import 'crowdhandler_result.dart';
 import 'crowdhandler_exception.dart';
 
-/// A session-based interface to CrowdHandler, with:
-///  - timeouts & fallback so the app never breaks,
-///  - automatic user agent inference via `fk_user_agent`,
-///  - automatic language detection from device locale,
-///  - no constructor changes => backward compatibility.
+/// A session-based interface to CrowdHandler with:
+/// - timeouts & fallback so the app never breaks,
+/// - a static user agent = "Flutter App",
+/// - region-based language detection from device locale if available (e.g. "en-US"),
+/// - no constructor changes => backward compatibility.
 class CrowdHandlerSession {
   final String xApiKey;
   final String baseUrl;
@@ -28,50 +21,28 @@ class CrowdHandlerSession {
     this.token,
   });
 
-  /// --------------- INIT ---------------
-  /// If you want to use fk_user_agent's detection, you should call:
-  ///   await FkUserAgent.init();
-  /// at app startup, or before making requests the first time.
-  ///
-  /// If not called, fk_user_agent will attempt to init lazily,
-  /// but it's recommended to do so once in main(), for example:
-  ///
-  /// ```dart
-  /// void main() async {
-  ///   WidgetsFlutterBinding.ensureInitialized();
-  ///   await FkUserAgent.init();
-  ///   runApp(MyApp());
-  /// }
-  /// ```
-  /// This ensures FkUserAgent.userAgent is populated.
-  /// ------------------------------------
-
-  /// Infers `agent` using `fk_user_agent`, and `lang` from device locale.
-  /// Falls back to "MyFlutterApp" / "en" if anything fails.
+  /// Infers `agent = "Flutter App"`,
+  /// and `lang` as languageCode-countryCode if possible (e.g. "en-US"), 
+  /// else just languageCode (e.g. "en"), fallback "en" if no locale found.
   Map<String, String> _inferAgentLang() {
-    String detectedAgent = 'MyFlutterApp';
-    String detectedLang = 'en';
+    const String detectedAgent = 'Flutter App';
+    String detectedLang = 'en'; // fallback
 
     try {
-      // 1) Attempt to read the user agent from FkUserAgent
-      // If not initialized, it tries to init automatically but may not always work perfectly.
-      final userAgent = FkUserAgent.userAgent; 
-      // If null or empty, we keep fallback
-      if (userAgent != null && userAgent.isNotEmpty) {
-        detectedAgent = userAgent;
-      }
-    } catch (e) {
-      debugPrint('fk_user_agent detection failed: $e');
-    }
-
-    try {
-      // 2) Attempt to read device locale
       final locales = PlatformDispatcher.instance.locales;
       if (locales.isNotEmpty) {
-        detectedLang = locales.first.languageCode; // e.g. 'en'
+        final first = locales.first;
+        final language = first.languageCode;    // e.g. "en"
+        final country = first.countryCode;      // e.g. "US"
+        if (country != null && country.isNotEmpty) {
+          detectedLang = '$language-$country';  // "en-US"
+        } else {
+          detectedLang = language;              // "en"
+        }
       }
     } catch (e) {
-      debugPrint('Error detecting language: $e');
+      debugPrint('Error detecting locale: $e');
+      // fallback => "en"
     }
 
     return {
@@ -80,7 +51,7 @@ class CrowdHandlerSession {
     };
   }
 
-  /// POST /requests
+  /// POST /requests => if no token, create new waiting room request.
   /// On error => fallback => promoted=1
   Future<CrowdHandlerResult> createRequest(String targetUrl) async {
     final endpoint = Uri.parse('$baseUrl/requests');
@@ -92,8 +63,8 @@ class CrowdHandlerSession {
     final al = _inferAgentLang();
     final bodyMap = {
       'url': targetUrl,
-      'agent': al['agent'],
-      'lang': al['lang'],
+      'agent': al['agent'],   // "Flutter App"
+      'lang': al['lang'],     // e.g. "en-US"
     };
     final bodyJson = jsonEncode(bodyMap);
 
@@ -133,8 +104,8 @@ class CrowdHandlerSession {
     final al = _inferAgentLang();
     final queryMap = {
       'url': targetUrl,
-      'agent': al['agent'],
-      'lang': al['lang'],
+      'agent': al['agent'], // "Flutter App"
+      'lang': al['lang'],   // e.g. "en-US"
     };
     final query = Uri(queryParameters: queryMap).query;
     final endpoint = Uri.parse('$baseUrl/requests/$token?$query');
@@ -194,8 +165,8 @@ class CrowdHandlerSession {
     final bodyMap = {
       'time': timeMs,
       'httpCode': httpCode,
-      'agent': al['agent'],
-      'lang': al['lang'],
+      'agent': al['agent'], // "Flutter App"
+      'lang': al['lang'],   // e.g. "en-US"
     };
     final bodyJson = jsonEncode(bodyMap);
 
